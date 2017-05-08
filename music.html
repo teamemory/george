@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		.container{
+			width:352px;
+			height: 550px;
+			margin: 0 auto;
+			background: #605849;
+			position: relative;
+		}
+		.songName{
+			padding-top: 50px;
+			color: #fff;
+			text-align: center;
+			font-size: 20px;
+		}
+		img{
+			position: absolute;
+			bottom: 30px;
+		}
+		img:hover{
+			cursor: pointer;
+		}
+		img:nth-child(3){
+			left: 60px;
+		}
+		img:nth-child(4){
+			left: 140px;
+		}
+		img:nth-child(5){
+			left: 240px;
+		}
+		#d1{
+			margin: 10px auto;
+			width: 150px;
+			height: 150px;
+
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<audio id='d1' src=""  >你的浏览器不支持音乐播放</audio>
+		<div class="songName">天若有情</div>
+		<img src="img/553.png" alt="" class="left">
+		<img src="img/play.png" alt="" >
+		<img src="img/557.png" alt="" class="right">
+		<div  id='d1'>
+			<canvas width="150px" height="150px" id="img1"></canvas>
+		</div>
+		
+	</div>
+	
+	<script src='js/jquery-1.11.3.js'></script>
+	<script>
+		// 定义一个数组装上音乐的路径
+		var arr=['src/A-Lin-天若有情-(电视剧《锦绣未央》主题曲).mp3','src/G.E.M.邓紫棋-喜欢你 (原唱- Beyond).mp3','src/李玉刚-刚好遇见你.mp3','src/林俊杰-女儿情+菊花台.mp3','src/张碧晨&杨宗纬-凉凉-(电视剧《三生三世十里桃花》片尾曲).mp3','src/赵雷-成都.mp3'];
+		var arr1=['天若有情','喜欢你','刚好遇见你','女儿情','凉凉','成都'];
+		var arr2=['13.png','15.png','1.png','3.png','14.png','16.png'];
+		var leftButton=document.getElementsByClassName('left')[0];
+		var rightButton=document.getElementsByClassName('right')[0];
+		var audio=document.getElementById('d1');
+		audio.setAttribute('src',arr[0]);
+		
+		var i=0;
+		//console.log(i);
+		// 内容
+		// canvas绘图圆形的图片动态
+		// 设置定时器
+		// 给left绑定单击事件
+		leftButton.onclick=function(){
+			// 找到当前路径的的下标位置
+			// 然后将路径改为下标减1的路径
+			var src1=audio.getAttribute('src');
+			 i=arr.indexOf(src1);
+			if(audio.paused){
+				i--;
+				if(i==-1){
+					i=arr.length-1;
+				}
+				// console.log(i);
+				// img.src=`img/${arr2[i]}`;
+				audio.setAttribute('src',arr[i]);
+				audio.pause();
+				// 更换图片
+				$('img:nth-child(4)').attr('src','img/play.png');
+				$('.songName').html(arr1[i]);
+
+			}else{
+				var src=audio.getAttribute('src');
+				 i=arr.indexOf(src);
+				i--;
+				if(i==-1){
+					i=arr.length-1;
+				}
+
+				// console.log(i);
+				// img.src=`img/${arr2[i]}`;
+				audio.setAttribute('src',arr[i]);
+				audio.play();
+				$('img:nth-child(4)').attr('src','img/paused.png');
+				$('.songName').html(arr1[i]);
+			}
+		};
+		// 给right绑定单击事件
+			// 找到当前路径的的小标位置
+			// 然后将路径改为下标加1的路径
+		rightButton.onclick=function(){
+			if(audio.paused){
+				var src=audio.getAttribute('src');
+				i=arr.indexOf(src);
+				i++;
+				if(i==arr.length){
+					i=0;
+				}
+				// k();
+				console.log(i);
+				// img.src=`img/${arr2[i]}`;
+				audio.setAttribute('src',arr[i]);
+				audio.pause();
+				// 更换图片
+				$('img:nth-child(4)').attr('src','img/play.png');
+				$('.songName').html(arr1[i]);
+
+			}else{
+				// var src=audio.getAttribute('src');
+				 var src1=audio.getAttribute('src');
+					 i=arr.indexOf(src1);
+				i++;
+
+				if(i==arr.length){
+					i=0;
+				}
+				// k();
+				 console.log(i);
+				// img.src=`img/${arr2[i]}`;
+				audio.setAttribute('src',arr[i]);
+				audio.play();
+				$('img:nth-child(4)').attr('src','img/paused.png');
+				$('.songName').html(arr1[i]);
+			}
+		};
+		// 播放与暂停
+		// 点击事件
+		$('img:nth-child(4)').on('click',function(){
+			// 判断此刻的播放状态
+				// 如果停止,则播放
+			if(audio.paused){
+				audio.play();
+
+				// 更换图片
+				$('img:nth-child(4)').attr('src','img/paused.png');
+			}else{
+				audio.pause();
+				$('img:nth-child(4)').attr('src','img/play.png');
+			}
+				
+		});
+		
+		var ctx=img1.getContext('2d');
+		var img=new Image();
+		// console.log(i);
+		img.src=`img/${arr2[i]}`;
+		img.onload=function(){
+			var deg=0;
+			var timer=setInterval(function(){
+				ctx.clearRect(0,0,150,150);
+				ctx.save();
+				ctx.translate(img.width/2,img.height/2);
+				ctx.rotate(deg*Math.PI/180);
+				ctx.drawImage(img,-img.width/2,-img.height/2);
+				ctx.restore();
+				// deg+=10;
+				if(audio.paused){
+					deg=0;
+				}else{
+					deg+=1;
+				}
+
+			}, 100);
+
+		};
+	
+		
+		
+	</script>
+
+</body>
+</html>
